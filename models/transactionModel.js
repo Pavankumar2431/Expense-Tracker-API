@@ -1,11 +1,4 @@
-const sqlite3 = require('sqlite3').verbose();
-const path = require('path');
-
-// Define the path to the SQLite database file
-const dbPath = path.resolve(__dirname, '../expenseTracker.db');
-
-// Connect to the SQLite database
-const db = new sqlite3.Database(dbPath);
+const db = require('../config/dbConfig'); 
 
 // Function to add a transaction
 const addTransaction = (transaction, callback) => {
