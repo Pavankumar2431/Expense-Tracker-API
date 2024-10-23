@@ -102,15 +102,10 @@ Add a new transaction to the database.
 
 #### GET /transactions/summary
 
-This endpoint provides a summary of all transactions, including total income, total expenses, and the balance.
+The GET /summary endpoint provides an overview of all transactions, including the total income, total expenses, and the current balance. Optionally, you can filter the summary by date range and category.
 
-### Response:
+![summary](https://github.com/user-attachments/assets/9576848e-fea9-46af-ac09-e73dd656257e)
 
-{
-  "totalIncome": 5000,
-  "totalExpense": 3000,
-  "balance": 2000
-}
 
 
 ### Technologies Used
