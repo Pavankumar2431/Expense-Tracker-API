@@ -117,18 +117,37 @@ exports.deleteTransaction = (req, res) => {
 
 // Get summary of transactions
 exports.getSummary = (req, res) => {
-    const query = `
+    const { startDate, endDate, category } = req.query;
+
+    // Base query for calculating summary
+    let query = `
         SELECT 
-            SUM(CASE WHEN type = 'income' THEN amount ELSE 0 END) AS total_income,
-            SUM(CASE WHEN type = 'expense' THEN amount ELSE 0 END) AS total_expenses,
-            SUM(amount) AS balance
+        SUM(CASE WHEN type = 'income' THEN amount ELSE 0 END) AS total_income,
+        SUM(CASE WHEN type = 'expense' THEN amount ELSE 0 END) AS total_expenses,
+        SUM(CASE WHEN type = 'income' THEN amount ELSE -amount END) AS balance
         FROM transactions
     `;
 
-    db.get(query, [], (err, row) => {
+    // Array to hold query parameters
+    const queryParams = [];
+
+    // Add optional filtering by date range and category
+    if (startDate && endDate) {
+        query += ' WHERE date BETWEEN ? AND ?';
+        queryParams.push(startDate, endDate);
+    }
+
+    if (category) {
+        query += startDate && endDate ? ' AND' : ' WHERE';
+        query += ' category = ?';
+        queryParams.push(category);
+    }
+
+    db.get(query, queryParams, (err, row) => {
         if (err) {
             return res.status(500).json({ error: 'Failed to retrieve summary' });
         }
         res.status(200).json(row);
     });
 };
+
